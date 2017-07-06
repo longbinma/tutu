@@ -19,6 +19,7 @@ type Images struct {
 	Name        string `orm:"index"`
 	Path        string
 	Type_name   string
+	Des         string
 	Upload_time time.Time
 }
 
@@ -40,4 +41,9 @@ func RegisterDB() {
 	orm.RegisterModel(new(Images), new(Utype))
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", "root:123456@/tutu?charset=utf8", 10, 10)
+}
+
+func ImagesAdd(o orm.Ormer, images Images) (int64, error) {
+	// insert
+	return o.Insert(&images)
 }

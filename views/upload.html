@@ -7,7 +7,8 @@
 <body>
 <form enctype="multipart/form-data" id="typename" action="/upload" method="post">
 上传文件：<input type="file" name="uploadname"  />
-产品说明：<input type="test" name="content" maxlength="480" size="50" />
+产品说明：<input type="test" name="desname" maxlength="480" size="50" />   
+<!-- input name属性的值一定要带有name，类似xxxname样式，不然逻辑函数无法获取提交内容 -->
 <input type="submit" >
 </form>
 U盘类型：<select name="type" form="typename">

@@ -6,6 +6,8 @@ import (
 	"time"
 	"tutu/models"
 
+	"reflect"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
@@ -19,8 +21,28 @@ type Upload struct {
 }
 
 func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
+	orm.Debug = true
+	o := orm.NewOrm()
+	o.Using("default") // 默认使用 default，你可以指定为其他数据库
+	var maps []orm.Params
+	var Images models.Images
+	//res, err := o.QueryTable("Article").Filter("id", "name").All(&Article)
+	num, err := o.QueryTable("Images").Values(&maps, "id", "name", "Path", "Type_name", "Des")
+	if err == orm.ErrNoRows {
+		fmt.Println("查询不到")
+	} else if err == orm.ErrMissPK {
+		fmt.Println("找不到主键")
+	} else {
+		fmt.Println(Images.Id, Images.Name)
+		fmt.Println("res是:", reflect.TypeOf(maps))
+		fmt.Println(num)
+		for _, v := range maps {
+
+			fmt.Println(reflect.TypeOf(v))
+		}
+		c.Data["m"] = maps
+	}
+
 	c.TplName = "index.tpl"
 }
 
@@ -39,11 +61,12 @@ func (c *Upload) Post() {
 	// 获取下拉菜单内容
 	var Type_path string
 	jsoninfo := c.GetString("type")
+	fmt.Println(jsoninfo)
 	if jsoninfo == "" {
 		fmt.Println("jsoninfo is empty")
 	}
 
-	desinfo := c.GetString("des")
+	desinfo := c.GetString("desname")
 	fmt.Println(desinfo)
 	if desinfo == "" {
 		fmt.Println("des is empty")
@@ -53,7 +76,7 @@ func (c *Upload) Post() {
 	f, h, err := c.GetFile("uploadname")
 	defer f.Close()
 	if err != nil {
-		// fmt.Println("getfile err ", err)
+		fmt.Println("getfile err ", err)
 	} else {
 		//fmt.Println(h.Filename)
 

@@ -13,7 +13,7 @@
 	
   </div>
   <div class="content">
-	test
+	内容：{{.m}}
   </div>
   <div class="footer">
 	test
